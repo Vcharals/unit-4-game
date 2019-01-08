@@ -1,96 +1,80 @@
-$( document ).ready(function(){
-  var Random=Math.floor(Math.random()*101+19)
-  // Selects a random number to be shown at the start of the game
-  // Number should be should be between 19 - 120
-  //
-  $('#randomNumber').text(Random);
-  // Appending random number to the randomNumber id in the html doc
-  //
-  var num1= Math.floor(Math.random()*11+1)
-  var num2= Math.floor(Math.random()*11+1)
-  var num3= Math.floor(Math.random()*11+1)
-  var num4= Math.floor(Math.random()*11+1)
-  // Setting up random numbers for each jewel
-  // Random number has to be between 1 - 12
-  // 
-  var userTotal= 0; 
-  var wins= 0;
-  var losses = 0;
-  //  Decaring variables for tallies
-$('#numberWins').text(wins);
-$('#numberLosses').text(losses);
-//resets the game
-function reset(){
-      Random=Math.floor(Math.random()*101+19);
-      console.log(Random)
-      $('#randomNumber').text(Random);
-      num1= Math.floor(Math.random()*11+1);
-      num2= Math.floor(Math.random()*11+1);
-      num3= Math.floor(Math.random()*11+1);
-      num4= Math.floor(Math.random()*11+1);
-      userTotal= 0;
-      $('#finalTotal').text(userTotal);
-      } 
-//adds the wins to the userTotal
-function yay(){
-alert("You won!");
-  wins++; 
-  $('#numberWins').text(wins);
-  reset();
-}
-//addes the losses to the userTotal
-function loser(){
-alert ("You lose!");
-  losses++;
-  $('#numberLosses').text(losses);
-  reset()
-}
-//sets up click for jewels
-  $('#one').on ('click', function(){
-    userTotal = userTotal + num1;
-    console.log("New userTotal= " + userTotal);
-    $('#finalTotal').text(userTotal); 
-          //sets win/lose conditions
-        if (userTotal == Random){
-          yay();
-        }
-        else if ( userTotal > Random){
-          loser();
-        }   
-  })  
-  $('#two').on ('click', function(){
-    userTotal = userTotal + num2;
-    console.log("New userTotal= " + userTotal);
-    $('#finalTotal').text(userTotal); 
-        if (userTotal == Random){
-          yay();
-        }
-        else if ( userTotal > Random){
-          loser();
-        } 
-  })  
-  $('#three').on ('click', function(){
-    userTotal = userTotal + num3;
-    console.log("New userTotal= " + userTotal);
-    $('#finalTotal').text(userTotal);
-//sets win/lose conditions
-          if (userTotal == Random){
-          yay();
-        }
-        else if ( userTotal > Random){
-          loser();
-        } 
-  })  
-  $('#four').on ('click', function(){
-    userTotal = userTotal + num4;
-    console.log("New userTotal= " + userTotal);
-    $('#finalTotal').text(userTotal); 
-      
-          if (userTotal == Random){
-          yay();
-        }
-        else if ( userTotal > Random){
-          loser();
-        }
-  });   
-}); 
+$(document).ready(function() { 
+  console.log("DOM fully loaded and parsed");
+  let yourWins = 0;
+  let yourLosses = 0;
+  let yourTotalScore = 0;
+  let blue = 0;
+  let yellow = 0;
+  let green = 0;
+  let red = 0;
+  let computerNum = 0;
+  // displaying initial score of 0
+  $("#score").html(yourTotalScore);
+
+  const generateRandomNum = function() {
+      let random = Math.floor(Math.random() * 100 + 19);
+      computerNum += random;
+      return random;
+  }
+
+  // Generating random number to match
+  $("#randomNum").html(generateRandomNum());
+
+  const generateCrystalNum = function() {
+      let random = Math.floor(Math.random() * 12 + 1);
+      return random;
+  }
+
+  // generating random numbers for each crystal and assigning their values to declared variables above
+  const initialCrystalNum = function() {
+      blue += generateCrystalNum();
+      red += generateCrystalNum();
+      green += generateCrystalNum();
+      yellow += generateCrystalNum();
+  }
+
+  initialCrystalNum();
+
+  // assigning value of button clicked to correct crystal. 
+  $("button").on("click", function() {
+      if(this.id === "blue") {
+          yourTotalScore += blue;
+      } else if(this.id === "yellow") {
+          yourTotalScore += yellow;
+      } else if(this.id === "red") {
+          yourTotalScore += red;
+      } else if(this.id === "green") {
+          yourTotalScore += green;
+      }
+      // setting yourTotalScore equal to the value of any button pressed.
+      $("#score").html(yourTotalScore);
+      winOrLose();
+  });
+
+  const winOrLose = function() {
+      if(yourTotalScore === computerNum) {
+          yourWins += 1;
+          $("#win").html(yourWins);
+          alert("You win!");
+          reset();   
+      } else if(yourTotalScore > computerNum) {
+          yourLosses += 1;
+          $("#loss").html(yourLosses);
+          alert("You lose.");
+          reset();
+      }
+  }
+  
+  // resets all values back to 0 for user to play again.
+  const reset = function() {  
+      yourTotalScore = 0;
+      $("#score").html(yourTotalScore);
+      blue = 0;
+      green = 0;
+      yellow = 0;
+      red = 0;
+      computerNum = 0;
+      initialCrystalNum();
+      $("#randomNum").html(computerNum += generateRandomNum());
+  }
+});
